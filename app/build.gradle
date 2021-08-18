@@ -93,5 +93,8 @@ dependencies {
     // MPAndroidChart
     implementation "com.github.PhilJay:MPAndroidChart:$mpandroidchart_version"
 
+    //DataStore, Store preferences
+    implementation("androidx.datastore:datastore-preferences:$prefDatastore_version")
+
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 }

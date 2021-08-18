@@ -1,8 +1,11 @@
-package com.miqbalkalevi.joggingtracker
+package com.miqbalkalevi.joggingtracker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.miqbalkalevi.joggingtracker.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
