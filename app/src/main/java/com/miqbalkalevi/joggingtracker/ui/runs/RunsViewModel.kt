@@ -2,8 +2,8 @@ package com.miqbalkalevi.joggingtracker.ui.runs
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miqbalkalevi.joggingtracker.data.JogSortOrder
 import com.miqbalkalevi.joggingtracker.data.PreferenceManager
-import com.miqbalkalevi.joggingtracker.data.SortOrder
 import com.miqbalkalevi.joggingtracker.data.repositories.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest
@@ -22,7 +22,7 @@ class RunsViewModel @Inject constructor(
         mainRepository.getJogsSortedBy(filterPreferences.sortOrder)
     }
 
-    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
+    fun onSortOrderSelected(sortOrder: JogSortOrder) = viewModelScope.launch {
         preferenceManager.updateSortOrder(sortOrder)
     }
 }

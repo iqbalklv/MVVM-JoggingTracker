@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/runsFragment"
+        android:name="com.miqbalkalevi.joggingtracker.ui.runs.RunsFragment"
+        android:label="fragment_runs"
+        tools:layout="@layout/fragment_runs" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.miqbalkalevi.joggingtracker.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.miqbalkalevi.joggingtracker.ui.statistics.StatisticsFragment"
+        android:label="fragment_statistics"
+        tools:layout="@layout/fragment_statistics" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.miqbalkalevi.joggingtracker.ui.login.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_runsFragment"
+            app:destination="@id/runsFragment" />
+    </fragment>
+</navigation>

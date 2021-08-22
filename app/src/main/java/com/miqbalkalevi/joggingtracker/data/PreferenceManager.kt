@@ -37,7 +37,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         }
         .map { prefs ->
             //region initializing default preferences values
-            val sortOrder = prefs[preferencesKeys.SORT_ORDER] ?: SortOrder.stringValue.SORT_BY_DATE
+            val sortOrder = prefs[preferencesKeys.JOG_SORT_ORDER] ?: SORT_BY_DATE.stringValue
 
             //endregion
 
@@ -45,37 +45,59 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
             FilterPreferences(sortOrder)
         }
 
-    suspend fun updateSortOrder(sortOrder: SortOrder) {
+    suspend fun updateSortOrder(jogSortOrder: JogSortOrder) {
         dataStore.edit { prefs ->
-            prefs[preferencesKeys.SORT_ORDER] =
-                when (sortOrder) {
-                    SortOrder.SORT_BY_DATE -> SortOrder.stringValue.SORT_BY_DATE
-                    SortOrder.SORT_BY_AVERAGE_SPEED -> SortOrder.stringValue.SORT_BY_AVERAGE_SPEED
-                    SortOrder.SORT_BY_DURATION -> SortOrder.stringValue.SORT_BY_DURATION
-                    SortOrder.SORT_BY_CALORIES_BURNED -> SortOrder.stringValue.SORT_BY_CALORIES_BURNED
-                    SortOrder.SORT_BY_DISTANCE -> SortOrder.stringValue.SORT_BY_DISTANCE
-                }
+            prefs[preferencesKeys.JOG_SORT_ORDER] = jogSortOrder.stringValue
         }
     }
 
     private object preferencesKeys {
-        val SORT_ORDER = stringPreferencesKey("sort_order")
+        val JOG_SORT_ORDER = stringPreferencesKey("sort_order")
 
+    }
+
+    companion object {
+        val SORT_BY_DATE =
+            JogSortOrder(JogSortOrder.Type.SORT_BY_DATE)
+        val SORT_BY_AVERAGE_SPEED =
+            JogSortOrder(JogSortOrder.Type.SORT_BY_AVERAGE_SPEED)
+        val SORT_BY_DURATION = JogSortOrder(JogSortOrder.Type.SORT_BY_DURATION)
+        val SORT_BY_CALORIES_BURNED =
+            JogSortOrder(JogSortOrder.Type.SORT_BY_CALORIES_BURNED)
+        val SORT_BY_DISTANCE = JogSortOrder(JogSortOrder.Type.SORT_BY_DISTANCE)
     }
 }
 
-enum class SortOrder {
-    SORT_BY_DATE,
-    SORT_BY_AVERAGE_SPEED,
-    SORT_BY_DURATION,
-    SORT_BY_CALORIES_BURNED,
-    SORT_BY_DISTANCE;
+class JogSortOrder(
+    val type: Type,
+    val stringValue: String =
+        when (type) {
+            //Setup type and its string value here.
+            Type.SORT_BY_DATE -> StringValue.SORT_BY_DATE
+            Type.SORT_BY_AVERAGE_SPEED -> StringValue.SORT_BY_AVERAGE_SPEED
+            Type.SORT_BY_DURATION -> StringValue.SORT_BY_DURATION
+            Type.SORT_BY_CALORIES_BURNED -> StringValue.SORT_BY_CALORIES_BURNED
+            Type.SORT_BY_DISTANCE -> StringValue.SORT_BY_DISTANCE
+        }
+) {
 
-    object stringValue {
-        const val SORT_BY_DATE = "sort_by_date"
-        const val SORT_BY_AVERAGE_SPEED = "sort_by_average_speed"
-        const val SORT_BY_DURATION = "sort_by_duration"
-        const val SORT_BY_CALORIES_BURNED = "sort_by_calories_burned"
-        const val SORT_BY_DISTANCE = "sort_by_distance"
+    //Used in DB queries. Must be constant.
+    class StringValue {
+        companion object {
+            const val SORT_BY_DATE = "sort_by_date"
+            const val SORT_BY_AVERAGE_SPEED = "sort_by_average_speed"
+            const val SORT_BY_DURATION = "sort_by_duration"
+            const val SORT_BY_CALORIES_BURNED = "sort_by_calories_burned"
+            const val SORT_BY_DISTANCE = "sort_by_distance"
+        }
+    }
+
+    enum class Type {
+        SORT_BY_DATE,
+        SORT_BY_AVERAGE_SPEED,
+        SORT_BY_DURATION,
+        SORT_BY_CALORIES_BURNED,
+        SORT_BY_DISTANCE;
     }
 }
+

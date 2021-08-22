@@ -1,7 +1,7 @@
 package com.miqbalkalevi.joggingtracker.data.database
 
 import androidx.room.*
-import com.miqbalkalevi.joggingtracker.data.SortOrder
+import com.miqbalkalevi.joggingtracker.data.JogSortOrder
 import com.miqbalkalevi.joggingtracker.data.model.Jog
 import kotlinx.coroutines.flow.Flow
 
@@ -18,11 +18,11 @@ interface JogDao {
         """
         SELECT * FROM jog_table
         ORDER BY 
-        CASE WHEN :sortOrder = '${SortOrder.stringValue.SORT_BY_DATE}' THEN timestamp END DESC,
-        CASE WHEN :sortOrder = '${SortOrder.stringValue.SORT_BY_DURATION}' THEN duration END DESC,
-        CASE WHEN :sortOrder = '${SortOrder.stringValue.SORT_BY_CALORIES_BURNED}' THEN caloriesBurned END DESC,
-        CASE WHEN :sortOrder = '${SortOrder.stringValue.SORT_BY_AVERAGE_SPEED}'  THEN avgSpeedInKMH END DESC,
-        CASE WHEN :sortOrder = '${SortOrder.stringValue.SORT_BY_DISTANCE}' THEN distanceInMeters END DESC
+        CASE WHEN :sortOrder = '${JogSortOrder.StringValue.SORT_BY_DATE}' THEN timestamp END DESC,
+        CASE WHEN :sortOrder = '${JogSortOrder.StringValue.SORT_BY_DURATION}' THEN duration END DESC,
+        CASE WHEN :sortOrder = '${JogSortOrder.StringValue.SORT_BY_CALORIES_BURNED}' THEN caloriesBurned END DESC,
+        CASE WHEN :sortOrder = '${JogSortOrder.StringValue.SORT_BY_AVERAGE_SPEED}'  THEN avgSpeedInKMH END DESC,
+        CASE WHEN :sortOrder = '${JogSortOrder.StringValue.SORT_BY_DISTANCE}' THEN distanceInMeters END DESC
     """
     )
     fun getJogsSortedBy(sortOrder: String): Flow<List<Jog>>
