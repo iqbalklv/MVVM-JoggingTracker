@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/runsFragment">
 
     <fragment
         android:id="@+id/runsFragment"
         android:name="com.miqbalkalevi.joggingtracker.ui.runs.RunsFragment"
         android:label="fragment_runs"
-        tools:layout="@layout/fragment_runs" />
+        tools:layout="@layout/fragment_runs">
+        <action
+            android:id="@+id/action_runsFragment_to_trackingFragment"
+            app:destination="@id/trackingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.miqbalkalevi.joggingtracker.ui.settings.SettingsFragment"
@@ -21,12 +25,8 @@
         android:label="fragment_statistics"
         tools:layout="@layout/fragment_statistics" />
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.miqbalkalevi.joggingtracker.ui.login.LoginFragment"
-        android:label="LoginFragment"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_runsFragment"
-            app:destination="@id/runsFragment" />
-    </fragment>
+        android:id="@+id/trackingFragment"
+        android:name="com.miqbalkalevi.joggingtracker.ui.tracking.TrackingFragment"
+        android:label="fragment_tracking"
+        tools:layout="@layout/fragment_tracking" />
 </navigation>

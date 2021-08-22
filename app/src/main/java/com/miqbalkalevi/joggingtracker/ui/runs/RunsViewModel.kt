@@ -16,9 +16,9 @@ class RunsViewModel @Inject constructor(
     private val preferenceManager: PreferenceManager
 ) : ViewModel() {
 
-    val preferencesFlow = preferenceManager.preferencesFlow
+    val filterPreferencesFlow = preferenceManager.filterPreferencesFlow
 
-    val runs = preferencesFlow.flatMapLatest { filterPreferences ->
+    val runs = filterPreferencesFlow.flatMapLatest { filterPreferences ->
         mainRepository.getJogsSortedBy(filterPreferences.sortOrder)
     }
 

@@ -1,24 +1,39 @@
 package com.miqbalkalevi.joggingtracker.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
 import com.miqbalkalevi.joggingtracker.R
 import com.miqbalkalevi.joggingtracker.databinding.FragmentLoginBinding
+import com.miqbalkalevi.joggingtracker.exhaustive
+import com.miqbalkalevi.joggingtracker.ui.activity.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private val viewModel: LoginViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentLoginBinding.bind(view)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.loginEvent.collect { event ->
+                when (event) {
+                    is LoginViewModel.LoginEvent.NavigateToMainScreen -> {
+                        startActivity(Intent(requireContext(), MainActivity::class.java))
+                        requireActivity().finish()
+                    }
+                }.exhaustive
+            }
+        }
 
         binding.apply {
             viewModel.weight?.let { etWeight.setText(it.toString()) }
@@ -47,8 +62,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             }
 
             btnStart.setOnClickListener {
-                val action = LoginFragmentDirections.actionLoginFragmentToRunsFragment()
-                findNavController().navigate(action)
+                viewModel.onStartButtonClick()
             }
         }
 

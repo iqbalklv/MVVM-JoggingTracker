@@ -3,13 +3,11 @@ package com.miqbalkalevi.joggingtracker.data
 import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
@@ -17,16 +15,17 @@ import javax.inject.Singleton
 
 private const val TAG = "PreferenceManager"
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "main_preferences")
 
 data class FilterPreferences(val sortOrder: String)
+data class UserData(val weight: Int, val height: Int)
 
 @Singleton
 class PreferenceManager @Inject constructor(@ApplicationContext context: Context) {
 
     private val dataStore = context.dataStore
 
-    val preferencesFlow = context.dataStore.data
+    val filterPreferencesFlow = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 Log.e(TAG, "Error reading preferences", exception)
@@ -38,7 +37,6 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         .map { prefs ->
             //region initializing default preferences values
             val sortOrder = prefs[preferencesKeys.JOG_SORT_ORDER] ?: SORT_BY_DATE.stringValue
-
             //endregion
 
             //returns a flow of FilterPreferences
@@ -51,9 +49,32 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         }
     }
 
-    private object preferencesKeys {
-        val JOG_SORT_ORDER = stringPreferencesKey("sort_order")
+    suspend fun updateUserData(weight: Int, height: Int) {
+        dataStore.edit { prefs ->
+            prefs[preferencesKeys.USER_DATA_HEIGHT] = weight
+            prefs[preferencesKeys.USER_DATA_HEIGHT] = height
+        }
+    }
 
+    suspend fun readUserData(): UserData? {
+        val weight = dataStore.data.first()[preferencesKeys.USER_DATA_WEIGHT] ?: USER_DATA_NULL
+        val height = dataStore.data.first()[preferencesKeys.USER_DATA_HEIGHT] ?: USER_DATA_NULL
+        val userData =
+            if (weight == USER_DATA_NULL ||
+                height == USER_DATA_NULL
+            ) {
+                null
+            } else {
+                UserData(weight, height)
+            }
+        return userData
+    }
+
+
+    private object preferencesKeys {
+        val JOG_SORT_ORDER = stringPreferencesKey("jog_sort_order")
+        val USER_DATA_WEIGHT = intPreferencesKey("user_data_weight")
+        val USER_DATA_HEIGHT = intPreferencesKey("user_data_height")
     }
 
     companion object {
@@ -65,6 +86,8 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         val SORT_BY_CALORIES_BURNED =
             JogSortOrder(JogSortOrder.Type.SORT_BY_CALORIES_BURNED)
         val SORT_BY_DISTANCE = JogSortOrder(JogSortOrder.Type.SORT_BY_DISTANCE)
+
+        val USER_DATA_NULL = -1
     }
 }
 
