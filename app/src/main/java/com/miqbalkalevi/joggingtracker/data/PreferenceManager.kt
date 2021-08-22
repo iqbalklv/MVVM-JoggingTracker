@@ -51,7 +51,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
 
     suspend fun updateUserData(weight: Int, height: Int) {
         dataStore.edit { prefs ->
-            prefs[preferencesKeys.USER_DATA_HEIGHT] = weight
+            prefs[preferencesKeys.USER_DATA_WEIGHT] = weight
             prefs[preferencesKeys.USER_DATA_HEIGHT] = height
         }
     }
@@ -59,6 +59,7 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
     suspend fun readUserData(): UserData? {
         val weight = dataStore.data.first()[preferencesKeys.USER_DATA_WEIGHT] ?: USER_DATA_NULL
         val height = dataStore.data.first()[preferencesKeys.USER_DATA_HEIGHT] ?: USER_DATA_NULL
+        Log.d("USERDATATEST", "$weight W|$height H")
         val userData =
             if (weight == USER_DATA_NULL ||
                 height == USER_DATA_NULL
